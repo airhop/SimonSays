@@ -1,0 +1,18 @@
+.inline-headers h2, .inline-headers h4 {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.vertical-padding {
+	padding-top: 300px;
+}
+
+@media screen and (max-width: 970px){
+    .vertical-padding{
+        padding-top:10px;
+    }
+}
+
+.well {
+    overflow: hidden;
+}
