@@ -1,0 +1,479 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<!-- Head ================================================== -->
+  <head>
+    <meta charset="utf-8">
+    <title>tindeed: tinder for jobs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="bootstrap.css" media="screen">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://bootswatch.com/bower_components/html5shiv/dist/html5shiv.js"></script>
+      <script src="https://bootswatch.com/bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
+<script type="text/javascript"
+src="http://gdc.indeed.com/ads/apiresults.js"></script>
+
+<script>
+angular.module('News', ['ui.router'])
+.config([
+'$stateProvider',
+'$urlRouterProvider',
+function($stateProvider, $urlRouterProvider) {
+  $stateProvider
+    .state('home', {
+      url: '/home',
+      templateUrl: '/home.html',
+      controller: 'MainCtrl'
+    })
+    .state('swipe', {
+      url: '/swipe',
+      templateUrl: '/swipe.html',
+      controller: 'SwipeCtrl'
+    });
+
+  $urlRouterProvider.otherwise('home');
+}]) 
+.factory('sendFactory', [function(){
+  var o = {
+    users: []
+  };
+  return o;
+}])
+.controller('MainCtrl', [
+'$scope', '$state', 'sendFactory',
+function($scope, $state, sendFactory){
+  $scope.sendTheRequest = function(first,last,city,kw1,kw2,fiftyradius,type,state){
+	console.log(first,last,city,kw1,kw2,fiftyradius,type,state);
+$scope.users.push({
+      FN: "Aab",
+      LN: "LOL"
+    });
+	
+	$state.go('swipe');
+	$( 'welcomeName' ).text(first);
+  };
+
+  $scope.sendRequest = function(){
+    $scope.users = sendFactory.users;
+    if($scope.FN === '') { return; }
+    if($scope.LN === '') { return; }
+    if($scope.CITY === '') { return; }
+    if($scope.KEYWORD1 === '') { return; }
+    if($scope.KEYWORD2 === '') { return; }
+    var first = $scope.FN;
+    var last = $scope.LN;
+    var city = $scope.CITY;
+    var kw1 = $scope.KEYWORD1;
+    var kw2 = $scope.KEYWORD2;
+    var fiftyradius = $scope.limit;
+    var type = $scope.type;
+    var state = $scope.STATE;
+	
+	$scope.sendTheRequest(first,last,city,kw1,kw2,fiftyradius,type,state);
+  };
+
+}])
+.controller('SwipeCtrl', [
+'$scope',
+'$stateParams',
+function($scope, $stateParams){
+ 
+}]);
+</script>
+
+  </head>
+
+
+  <body ng-app="News">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <ui-view></ui-view>
+    </div>
+  </div>
+<script type="text/ng-template" id="/home.html">
+<!-- NavBar ================================================== -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand" style="padding-top: 5px"><img src="logo.png" height="50px" alt="Tindeed"></a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+            <li>
+              <a data-toggle="modal" data-target="#instructions" href=""><center><big>"It's Like Tinder...</big>     <small>but for jobs."</small></center></a>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://www.indeed.com">The Full indeed.com</a></li>
+            <li><a href="https://github.com/airhop/SimonSays/tree/master/Tindeed">Our Source Code</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+<!-- Form ================================================== -->
+    <div class="container" id="inputForm">
+	    <br>
+	    <br>
+	    <br>
+	    <br>
+	    <br>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="well bs-component">
+              <form class="form-horizontal" ng-submit="sendRequest()">
+                <fieldset>
+                  <legend>Tell Us a Little About What You're Looking For...</legend>
+	<!-- Name Fields -->
+                  <div class="form-group">
+                    <label for="inputName" class="col-lg-2 control-label">Name</label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" id="inputFirstnName" placeholder="First" ng-model="FN">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputName" class="col-lg-2 control-label"></label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" id="inputLastName" placeholder="Last" ng-model="LN">
+                    </div>
+                  </div>
+	<!-- Location Fields -->
+                  <div class="form-group">
+                    <label for="inputCity" class="col-lg-2 control-label">Location</label>
+                    <div class="col-lg-8">
+						<input type="text" class="form-control" id="inputCity" placeholder="City" ng-model="CITY">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputState" class="col-lg-2 control-label"></label>
+                    <div class="col-lg-8">
+						<select class="form-control" id="select" ng-model="STATE">
+							<option value="AL">Alabama</option>
+							<option value="AK">Alaska</option>
+							<option value="AZ">Arizona</option>
+							<option value="AR">Arkansas</option>
+							<option value="CA">California</option>
+							<option value="CO">Colorado</option>
+							<option value="CT">Connecticut</option>
+							<option value="DE">Delaware</option>
+							<option value="DC">District Of Columbia</option>
+							<option value="FL">Florida</option>
+							<option value="GA">Georgia</option>
+							<option value="HI">Hawaii</option>
+							<option value="ID">Idaho</option>
+							<option value="IL">Illinois</option>
+							<option value="IN">Indiana</option>
+							<option value="IA">Iowa</option>
+							<option value="KS">Kansas</option>
+							<option value="KY">Kentucky</option>
+							<option value="LA">Louisiana</option>
+							<option value="ME">Maine</option>
+							<option value="MD">Maryland</option>
+							<option value="MA">Massachusetts</option>
+							<option value="MI">Michigan</option>
+							<option value="MN">Minnesota</option>
+							<option value="MS">Mississippi</option>
+							<option value="MO">Missouri</option>
+							<option value="MT">Montana</option>
+							<option value="NE">Nebraska</option>
+							<option value="NV">Nevada</option>
+							<option value="NH">New Hampshire</option>
+							<option value="NJ">New Jersey</option>
+							<option value="NM">New Mexico</option>
+							<option value="NY">New York</option>
+							<option value="NC">North Carolina</option>
+							<option value="ND">North Dakota</option>
+							<option value="OH">Ohio</option>
+							<option value="OK">Oklahoma</option>
+							<option value="OR">Oregon</option>
+							<option value="PA">Pennsylvania</option>
+							<option value="RI">Rhode Island</option>
+							<option value="SC">South Carolina</option>
+							<option value="SD">South Dakota</option>
+							<option value="TN">Tennessee</option>
+							<option value="TX">Texas</option>
+							<option value="UT">Utah</option>
+							<option value="VT">Vermont</option>
+							<option value="VA">Virginia</option>
+							<option value="WA">Washington</option>
+							<option value="WV">West Virginia</option>
+							<option value="WI">Wisconsin</option>
+							<option value="WY">Wyoming</option>
+						</select>
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" ng-model="limit"> Limit Search to 50-Mile Radius
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+	<!-- Job Type Field -->
+                  <div class="form-group">
+                    <label for="select" class="col-lg-2 control-label">Job Type:</label>
+                    <div class="col-lg-8">
+                      <select class="form-control" id="select" ng-model="type">
+                        <option>Full Time</option>
+                        <option>Part Time</option>
+                        <option>Contract</option>
+                        <option>Internship</option>
+                        <option>Temporary</option>
+                      </select>
+                    </div>
+                  </div>
+	<!-- Job Keywords -->
+                  <div class="form-group">
+                    <label for="inputKeyword1" class="col-lg-2 control-label">Job Keywords:</label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" id="inputKeyword1" placeholder="Keyword" ng-model="KEYWORD1">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputKeyword2" class="col-lg-2 control-label"></label>
+                    <div class="col-lg-8">
+                      <input type="text" class="form-control" id="inputKeyword2" placeholder="Keyword" ng-model="KEYWORD2">
+                    </div>
+                  </div>
+	<!-- Reset/Submit Buttons -->
+                  <div class="form-group" style="text-align: center">
+                    <div class="col-lg-12">
+                      <button type="reset" class="btn btn-default">Clear Fields</button>
+                      <button type="submit" class="btn btn-primary">Show Me My Matches!</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+</script>
+
+<script type="text/ng-template" id="/swipe.html">
+<!-- NavBar ================================================== -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand" style="padding-top: 5px"><img src="logo.png" height="50px" alt="Tindeed"></a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+            <li>
+              <a data-toggle="modal" data-target="#instructions" href=""><center><big>"It's Like Tinder...</big>     <small>but for jobs."</small></center></a>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://www.indeed.com">The Full indeed.com</a></li>
+            <li><a href="https://github.com/airhop/SimonSays/tree/master/Tindeed">Our Source Code</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+	<a href="http://api.indeed.com/ads/apisearch?publisher=7225792040123962&q=java&l=austin%2C+tx&sort=&radius=&st=&jt=&start=&limit=&fromage=&filter=&latlong=1&co=us&chnl=&userip=1.2.3.4&useragent=Mozilla/%2F4.0%28Firefox%29&v=2">LOOOK</a>
+
+<!-- Cards ================================================== -->
+	<div class="container" id="jobView">
+		<div class="row">
+
+	<!-- Card Itself -->
+		    <div class="col-xs-12 col-md-8 col-md-push-2 container" id="jobCard">
+			    <br>
+			    <br>
+			    <br>
+			    <br>
+			    <br>
+			    <h1>Welcome, <span id="welcomeName"></span>!</h1>
+		        <div class="row">
+		          <div class="col-lg-12">
+		            <div class="well bs-component" style="overflow: hidden;">
+	<!-- Map -->
+		            	<center>
+		            		<div id="map" style="width:95%; height:300px"></div>
+		            	</center>
+	<!-- Job Title -->
+	    				<h2 style="display:inline-block; vertical-align:baseline; padding-left:15px" id="jobTitle">Internet Programmer</h2><h4 style="display:inline-block; vertical-align:baseline; padding-left:15px" id="jobLocation">Provo, Utah</h4>
+	<!-- Job Description -->
+		   				<div class="col-md-6">
+		   					<p id="jobDescription"><br>The job requirements are that you show up to work, do your job, and don't slack off when there are things that need to be done.</p>
+		   				</div>
+	<!-- Job Details -->
+		    			<div class="col-md-6">
+		    				<table class="table">
+							    <tbody>
+							      <tr>
+							        <td>Company:</td>
+							        <td id="jobCompany">Brigham Young University</td>
+							      </tr>
+							      <tr>
+							        <td>Posted:</td>
+							        <td id="jobPosted">4 Days Ago</td>
+							      </tr>
+							      <tr>
+							        <td>Source:</td>
+							        <td id="jobSource">Who posted the job?</td>
+							      </tr>
+							      <tr>
+							        <td>Requirements:</td>
+							        <td id="jobRequirements">List of our own made requirements</td>
+							      </tr>
+							    </tbody>
+							  </table>
+		   				</div>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+
+	<!-- No Button -->
+			<div class="col-xs-6 col-md-2 col-md-pull-8 vertical-padding">
+				<img class="img-responsive center-block" src="noButton.png" alt="No" style="min-wdith:50px">
+			</div>
+
+
+	<!-- Yes Button -->
+			<div class="col-xs-6 col-md-2 vertical-padding">
+				<img class="img-responsive center-block" src="yesButton.png" alt="Yes" style="min-wdith:50px">
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/ng-template" id="/results.html">
+<!-- NavBar ================================================== -->
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand" style="padding-top: 5px"><img src="logo.png" height="50px" alt="Tindeed"></a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+          <ul class="nav navbar-nav">
+            <li>
+              <a data-toggle="modal" data-target="#instructions" href=""><center><big>"It's Like Tinder...</big>     <small>but for jobs."</small></center></a>
+            </li>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://www.indeed.com">The Full indeed.com</a></li>
+            <li><a href="https://github.com/airhop/SimonSays/tree/master/Tindeed">Our Source Code</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+<!-- Results List ================================================== -->
+
+	<div class="container" id="resultsList">
+		<br>
+	    <br>
+	    <br>
+	    <br>
+	    <br>
+		<h1>Job's You've Liked:</h1>
+		<table class="table table-hover">
+		    <thead>
+		      <tr>
+		        <th>Position Title</th>
+		        <th>Company</th>
+		        <th>City</th>
+		        <th>Apply</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      <tr>
+		        <td id="jobTitle">Internet Programmer</td>
+		        <td id="jobCompany">Brigham Young University</td>
+		        <td id="jobLocation">Provo, UT</td>
+		        <td><a href="indeedURLhere"><button class="btn btn-danger" id="applyForJob">Apply Now</button></a></td>
+		      </tr>
+		      <tr>
+		        <td id="jobTitle">Internet Programmer</td>
+		        <td id="jobCompany">Utah Valley University</td>
+		        <td id="jobLocation">Orem, UT</td>
+		        <td><a href="indeedURLhere"><button class="btn btn-danger" id="applyForJob">Apply Now</button></a></td>
+		      </tr>
+		      <tr>
+		        <td id="jobTitle">Internet Programmer</td>
+		        <td id="jobCompany">Snow College</td>
+		        <td id="jobLocation">Ephraim, UT</td>
+		        <td><a href="indeedURLhere"><button class="btn btn-danger" id="applyForJob">Apply Now</button></a></td>
+		      </tr>
+		    </tbody>
+	  </table>
+	</div>
+
+<!-- Instructions Modal ================================================== -->
+	<div class="modal fade" id="instructions" role="dialog">
+	    <div class="modal-dialog modal-lg">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title"><big>It's Like Tinder...</big>but for jobs?</h4>
+	        </div>
+	        <div class="modal-body">
+	          <h4>Um...Tindeed?</h4>
+	          <p>Tindeed is simply a pun based off of two popular online companies. By combining the names of the dating app <em>Tinder</em> and the large job search website <em>Indeed</em>, we have come up with a not-so-unique way for a user to sift through job offers available online.</p>
+	          <br>
+	          <p>And yes, we know that sifting through jobs is a lot less exciting than swiping through potential eternal companions.</p>
+	          <br>
+	          <h4>So How do I use it?</h4>
+	          <p>Tindeed is designed to work quite similarly to the Tinder App, available for smartphones. In that app, choosing to 'swipe left' or 'swipe right' on a user's picture shows the user's interest in that person's profile. Similarly, Tindeed allows a user to choose to 'like' a job, or 'dislike' it, by clicking on the respective right or left buttons.</p>
+	          <br>
+	          When a person chooses one of these options, another job immediately populates and the user again chooses to like or dislike it.</p>
+	          <br>
+	          <h4>But, wait! Tinder relies on 'matching' with someone who likes you too!</h4>
+	          <p>Yeah, yeah, we know. In an ideal world, we could make a full Tinder clone for job searching, complete with job applicant profiles, recruiter profiles, in-app messaging systems, etc. In reality, we only had a week or so to complete the website. And even then, we procrastinated until the last possible moment. So no, recruiters aren't somewhere swiping left or right on your applicant profile. Just choose yes or no, then apply to the ones you chose to 'like.' Stop being so picky.</p>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+<span id=indeed_at><a href="http://www.indeed.com/">jobs</a> by <a
+href="http://www.indeed.com/" title="Job Search"><img
+src="http://www.indeed.com/p/jobsearch.gif" style="border: 0;
+vertical-align: middle;" alt="Indeed job search"></a></span>
+                                
+</script>
+<!-- Foooter ================================================ -->
+      <footer>
+        <div class="row text-right">
+          <div class="col-lg-12">
+            <p>Based on <a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.&nbsp&nbsp</p>
+
+          </div>
+        </div>
+
+      </footer>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  </body>
+</html>
