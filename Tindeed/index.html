@@ -11,14 +11,15 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type = "text/javascript" src = "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
   	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script type="text/javascript" src="script.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://bootswatch.com/bower_components/html5shiv/dist/html5shiv.js"></script>
       <script src="https://bootswatch.com/bower_components/respond/dest/respond.min.js"></script>
     <![endif]-->
+	<script type="text/javascript" src="script.js"></script>
   </head>
 
 
@@ -28,7 +29,7 @@
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="#" class="navbar-brand" style="padding-top: 5px"><img src="logo.png" height="50px" alt="Tindeed"></a>
+          <a href="javascript:window.location.reload(true)" class="navbar-brand" style="padding-top: 5px"><img src="logo.png" height="50px" alt="Tindeed"></a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -40,19 +41,23 @@
             <li>
               <a data-toggle="modal" data-target="#instructions" href=""><center><big>"It's Like Tinder...</big>     <small>but for jobs."</small></center></a>
             </li>
+            <li id="showMatchesBtn" style="background-color:#E83A30; color:white; cursor:pointer; padding: 20px;">Show Me My Matches!</li>
+            <li id="startOverBtn" style="background-color:#E83A30; color:white; cursor:pointer; padding: 20px;">Start Over</li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="http://www.indeed.com">The Full indeed.com</a></li>
-            <li><a href="https://github.com/airhop/SimonSays/tree/master/Tindeed">Our Source Code</a></li>
+            <li><a target="_blank" href="http://www.indeed.com">The Full indeed.com</a></li>
+            <li><a target="_blank" href="https://github.com/airhop/SimonSays/tree/master/Tindeed">Our Source Code</a></li>
           </ul>
 
         </div>
       </div>
     </div>
 
-<!-- Form ================================================== -->
-    <div class="container" id="inputForm">
+
+<!-- inputForm ================================================== -->
+
+    <div class="container" id="inputFormDiv">
 	    <br>
 	    <br>
 	    <br>
@@ -61,14 +66,14 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="well bs-component">
-              <form class="form-horizontal">
+              <div class="form-horizontal" id="infoForm">
                 <fieldset>
-                  <legend>Tell Us a Little About What You're Looking For...</legend>
+                  <legend>Tell Us a Little About What You Are Looking For...</legend>
 	<!-- Name Fields -->
                   <div class="form-group">
                     <label for="inputName" class="col-lg-2 control-label">Name</label>
                     <div class="col-lg-8">
-                      <input type="text" class="form-control" id="inputFirstnName" placeholder="First">
+                      <input type="text" class="form-control" id="inputFirstName" placeholder="First">
                     </div>
                   </div>
                   <div class="form-group">
@@ -81,13 +86,13 @@
                   <div class="form-group">
                     <label for="inputCity" class="col-lg-2 control-label">Location</label>
                     <div class="col-lg-8">
-						<input type="text" class="form-control" id="inputCity" placeholder="City">
+						<input type="text" class="form-control" id="inputCity" placeholder="Provo">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="inputState" class="col-lg-2 control-label"></label>
                     <div class="col-lg-8">
-						<select class="form-control" id="select">
+						<select class="form-control" id="selectState">
 							<option value="AL">Alabama</option>
 							<option value="AK">Alaska</option>
 							<option value="AZ">Arizona</option>
@@ -132,7 +137,7 @@
 							<option value="SD">South Dakota</option>
 							<option value="TN">Tennessee</option>
 							<option value="TX">Texas</option>
-							<option value="UT">Utah</option>
+							<option selected="selected" value="UT">Utah</option>
 							<option value="VT">Vermont</option>
 							<option value="VA">Virginia</option>
 							<option value="WA">Washington</option>
@@ -142,7 +147,7 @@
 						</select>
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox"> Limit Search to 50-Mile Radius
+                          <input type="checkbox" id="checkBox"> Limit Search to 50-Mile Radius
                         </label>
                       </div>
                     </div>
@@ -151,12 +156,12 @@
                   <div class="form-group">
                     <label for="select" class="col-lg-2 control-label">Job Type:</label>
                     <div class="col-lg-8">
-                      <select class="form-control" id="select">
-                        <option>Full Time</option>
-                        <option>Part Time</option>
-                        <option>Contract</option>
-                        <option>Internship</option>
-                        <option>Temporary</option>
+                      <select class="form-control" id="selectJobType">
+                        <option value="fulltime">Full Time</option>
+                        <option value="parttime">Part Time</option>
+                        <option value="contract">Contract</option>
+                        <option value="internship">Internship</option>
+                        <option value="temporary">Temporary</option>
                       </select>
                     </div>
                   </div>
@@ -176,25 +181,23 @@
 	<!-- Reset/Submit Buttons -->
                   <div class="form-group" style="text-align: center">
                     <div class="col-lg-12">
-                      <button type="reset" class="btn btn-default">Clear Fields</button>
-                      <button type="submit" class="btn btn-primary">Show Me My Matches!</button>
+                      <button class="btn btn-primary" id="getStarted">Let's Get Started!</button>
                     </div>
                   </div>
                 </fieldset>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-<!-- Cards ================================================== -->
-	<div class="container" id="jobView">
+
+<!-- jobView ================================================== -->
+	<div class="container" id="jobViewDiv">
 		<div class="row">
 
 	<!-- Card Itself -->
 		    <div class="col-xs-12 col-md-8 col-md-push-2 container" id="jobCard">
-			    <br>
-			    <br>
 			    <br>
 			    <br>
 			    <br>
@@ -207,10 +210,12 @@
 		            		<div id="map" style="width:95%; height:300px"></div>
 		            	</center>
 	<!-- Job Title -->
-	    				<h2 style="display:inline-block; vertical-align:baseline; padding-left:15px" id="jobTitle">Internet Programmer</h2><h4 style="display:inline-block; vertical-align:baseline; padding-left:15px" id="jobLocation">Provo, Utah</h4>
+						<div class="col-md-12">
+	    					<h2 style="display:inline-block; vertical-align:baseline; padding-left:15px" id="jobTitle">Internet Programmer</h2><h4 style="display:inline-block; vertical-align:baseline; padding-left:15px" id="jobLocation">Provo, Utah</h4>
+	    				</div>
 	<!-- Job Description -->
 		   				<div class="col-md-6">
-		   					<p id="jobDescription"><br>The job requirements are that you show up to work, do your job, and don't slack off when there are things that need to be done.</p>
+		   					<p id="jobDescription"><br>The job requirements are that you show up to work, do your job, and do not slack off when there are things that need to be done.</p>
 		   				</div>
 	<!-- Job Details -->
 		    			<div class="col-md-6">
@@ -228,10 +233,6 @@
 							        <td>Source:</td>
 							        <td id="jobSource">Who posted the job?</td>
 							      </tr>
-							      <tr>
-							        <td>Requirements:</td>
-							        <td id="jobRequirements">List of our own made requirements</td>
-							      </tr>
 							    </tbody>
 							  </table>
 		   				</div>
@@ -242,23 +243,21 @@
 
 	<!-- No Button -->
 			<div class="col-xs-6 col-md-2 col-md-pull-8 vertical-padding">
-				<img class="img-responsive center-block" src="noButton.png" alt="No" style="min-wdith:50px">
+				<img id= "noButton" class="img-responsive center-block" src="noButton.png" alt="No" style="min-wdith:50px; cursor: pointer;">
 			</div>
 
 
 	<!-- Yes Button -->
-			<div class="col-xs-6 col-md-2 vertical-padding">
-				<img class="img-responsive center-block" src="yesButton.png" alt="Yes" style="min-wdith:50px">
+			<div class="col-xs-6 col-md-2 vertical-padding" id="yesButton">
+				<img class="img-responsive center-block" src="yesButton.png" alt="Yes" style="min-wdith:50px; cursor: pointer;">
 			</div>
 		</div>
 	</div>
 
-<!-- Results List ================================================== -->
 
-	<div class="container" id="resultsList">
+<!-- Results List ================================================== -->
+	<div class="container" id="resultsListDiv">
 		<br>
-	    <br>
-	    <br>
 	    <br>
 	    <br>
 		<h1>Job's You've Liked:</h1>
@@ -271,25 +270,7 @@
 		        <th>Apply</th>
 		      </tr>
 		    </thead>
-		    <tbody>
-		      <tr>
-		        <td id="jobTitle">Internet Programmer</td>
-		        <td id="jobCompany">Brigham Young University</td>
-		        <td id="jobLocation">Provo, UT</td>
-		        <td><a href="indeedURLhere"><button class="btn btn-danger" id="applyForJob">Apply Now</button></a></td>
-		      </tr>
-		      <tr>
-		        <td id="jobTitle">Internet Programmer</td>
-		        <td id="jobCompany">Utah Valley University</td>
-		        <td id="jobLocation">Orem, UT</td>
-		        <td><a href="indeedURLhere"><button class="btn btn-danger" id="applyForJob">Apply Now</button></a></td>
-		      </tr>
-		      <tr>
-		        <td id="jobTitle">Internet Programmer</td>
-		        <td id="jobCompany">Snow College</td>
-		        <td id="jobLocation">Ephraim, UT</td>
-		        <td><a href="indeedURLhere"><button class="btn btn-danger" id="applyForJob">Apply Now</button></a></td>
-		      </tr>
+		    <tbody id="listTheResults">
 		    </tbody>
 	  </table>
 	</div>
@@ -324,11 +305,30 @@
 	  </div>
 	</div>
 
+<!-- Error Modal ================================================== -->
+
+	<div class="modal fade" id="error" role="dialog">
+	    <div class="modal-dialog modal-sm">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Something Went Wrong!</h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>Maybe try searching for a more <em>NORMAL</em> job!</p>
+	        </div>
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        </div>
+	      </div>
+	    </div>
+  </div>
+
 <!-- Foooter ================================================ -->
       <footer>
         <div class="row text-right">
           <div class="col-lg-12">
-            <p>Based on <a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.&nbsp&nbsp</p>
+            <p>Made with<a href="http://getbootstrap.com" rel="nofollow">Bootstrap</a>, <a href="http://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>, and <a href="http://www.google.com/webfonts" rel="nofollow">Google</a>.&nbsp&nbsp</p>
 
           </div>
         </div>
