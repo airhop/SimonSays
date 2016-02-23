@@ -1,5 +1,5 @@
 //Inputted Variables
-
+ 
 var FirstName = "User";
 var LastName = "User";
 var InputCity = "Provo";
