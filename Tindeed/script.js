@@ -1,5 +1,22 @@
+$(document).ready(function(){
+  $("#jobViewDiv").hide();
+  $("#resultsListDiv").hide();
+  $("#showMatchesBtn").hide();
+  $("#startOverBtn").hide();
+
+  likednum = 0;
+  counter = 0;
+
+
+  $('#startOverBtn').click(function(){
+     window.location.replace("http://ec2-52-34-157-203.us-west-2.compute.amazonaws.com/creative-project3/Tindeed/index.html#/home");
+      $("#resultsListDiv").hide();
+      $("#startOverBtn").hide();
+	location.reload();
+  });
+});
 //Inputted Variables
- 
+
 var FirstName = "User";
 var LastName = "User";
 var InputCity = "Provo";
@@ -18,18 +35,107 @@ var alljobs = "";
 var LikedJobs = new Object(); //JS object to hold liked jobs in
 var counter = 0; //Global overall job counter
 var likednum = 0; //Global liked jobs counter
+function generateCard(){
 
-$(document).ready(function(){
-  $("#jobViewDiv").hide();
-  $("#resultsListDiv").hide();
-  $("#showMatchesBtn").hide();
-  $("#startOverBtn").hide();
+    JobLatitude = alljobs.results[counter].latitude;
+    JobLongitude = alljobs.results[counter].longitude;
+    initialize();
 
-  likednum = 0;
-  counter = 0;
+  //Other Job Info Fields Set
+    $('#welcomeName').html(FirstName);
+    $('#jobTitle').html(alljobs.results[counter].jobtitle);
+    $('#jobLocation').html(alljobs.results[counter].formattedLocation);
+    $('#jobDescription').html(alljobs.results[counter].snippet)
+    $('#jobCompany').html(alljobs.results[counter].company)
+    $('#jobPosted').html(alljobs.results[counter].formattedRelativeTime)
+    $('#jobSource').html(alljobs.results[counter].source)
+    
+    counter++;
+    return true;
+  }
+ function showRes(){
+      $("#jobViewDiv").hide();
+      $("#resultsListDiv").show();
+      $("#showMatchesBtn").hide();
+      $("#startOverBtn").show();
+      generateResults();
+      $state.go('res');
+}
+  function generateResults() {
+    for (i=0; i<likednum; i++) {
+      $('#listTheResults').append("<tr><td>"+LikedJobs[i].jobtitle+"</td><td>"+LikedJobs[i].company+"</td><td>"+LikedJobs[i].formattedLocation+"</td><td><a target='_blank' href='"+LikedJobs[i].url+"''><button class='btn btn-danger'>Apply Now</button></a></td></tr>");
+    }
+  }
 
-// "getStarted" Button Click
-  $("#getStarted").click(function(){
+  var map;
+  function initialize() {
+    map = new google.maps.Map(document.getElementById("map"),{
+      center:new google.maps.LatLng(JobLatitude,JobLongitude),
+      draggable:false,
+      scrollwheel:false,
+      zoom:12,
+      mapTypeId:google.maps.MapTypeId.ROADMAP
+    });
+  };
+angular.module('News', ['ui.router'])
+.config([
+'$stateProvider',
+'$urlRouterProvider',
+function($stateProvider, $urlRouterProvider) {
+  $stateProvider
+    .state('res', {
+      url: '/res',
+      templateUrl: '/res.html',
+      controller: 'MainCtrl'
+    })
+    .state('home', {
+      url: '/home',
+      templateUrl: '/home.html',
+      controller: 'MainCtrl'
+    })
+    .state('swipe', {
+      url: '/swipe',
+      templateUrl: '/swipe.html',
+      controller: 'MainCtrl'
+    });
+
+  $urlRouterProvider.otherwise('home');
+}]) 
+.controller('MainCtrl', [
+'$scope', '$state',
+function($scope, $state){
+
+  $scope.nobut = function(){
+      if (counter<Object.keys(alljobs.results).length){
+        generateCard();
+      }
+      else {
+      $("#jobViewDiv").hide();
+      $("#resultsListDiv").show();
+      $("#showMatchesBtn").hide();
+      $("#startOverBtn").show();
+      generateResults();
+      $state.go('res');
+      }
+};
+  $scope.yesbut = function(){
+      $("#showMatchesBtn").show();
+      if (counter<Object.keys(alljobs.results).length){
+        LikedJobs[likednum] = alljobs.results[counter-1];
+        generateCard();
+        likednum++
+      }
+      else {
+      $("#jobViewDiv").hide();
+      $("#resultsListDiv").show();
+      $("#showMatchesBtn").hide();
+      $("#startOverBtn").show();
+      generateResults();
+      $state.go('res');
+      }
+};
+
+  $scope.changeToSwipe = function(){
     $("#inputFormDiv").hide();
     $("#jobViewDiv").show();
 
@@ -70,87 +176,11 @@ $(document).ready(function(){
         }
       }
     });
-
-    return false;
-  });
-
-  function generateCard(){
-
-    JobLatitude = alljobs.results[counter].latitude;
-    JobLongitude = alljobs.results[counter].longitude;
-    initialize();
-
-  //Other Job Info Fields Set
-    $('#welcomeName').html(FirstName);
-    $('#jobTitle').html(alljobs.results[counter].jobtitle);
-    $('#jobLocation').html(alljobs.results[counter].formattedLocation);
-    $('#jobDescription').html(alljobs.results[counter].snippet)
-    $('#jobCompany').html(alljobs.results[counter].company)
-    $('#jobPosted').html(alljobs.results[counter].formattedRelativeTime)
-    $('#jobSource').html(alljobs.results[counter].source)
-    
-    counter++;
-    alert(counter);
-    return true;
-  }
-
-  $("#yesButton").click(function(){
-      $("#showMatchesBtn").show();
-      if (counter<Object.keys(alljobs.results).length){
-        LikedJobs[likednum] = alljobs.results[counter-1];
-        generateCard();
-        likednum++
-      }
-      else {
-        generateResults();
-        $("#jobViewDiv").hide();
-        $("#resultsListDiv").show()
-      }
-  });
-
-  $("#noButton").click(function(){
-      if (counter<Object.keys(alljobs.results).length){
-        generateCard();
-      }
-      else {
-        generateResults();
-        $("#jobViewDiv").hide();
-        $("#resultsListDiv").show()
-      }
-  });
-
-  $('#showMatchesBtn').click(function(){
-      generateResults();
-      $("#jobViewDiv").hide();
-      $("#resultsListDiv").show();
+ $("#showMatchesBtn").hide();
+    $state.go('swipe');
       $("#showMatchesBtn").hide();
-      $("#startOverBtn").show();
-  });
-
-  $('#startOverBtn').click(function(){
-     location.reload();
-  });
-
-  function generateResults() {
-    for (i=0; i<likednum; i++) {
-      $('#listTheResults').append("<tr><td>"+LikedJobs[i].jobtitle+"</td><td>"+LikedJobs[i].company+"</td><td>"+LikedJobs[i].formattedLocation+"</td><td><a target='_blank' href='"+LikedJobs[i].url+"''><button class='btn btn-danger'>Apply Now</button></a></td></tr>");
-    }
-  }
-
-  var map;
-  function initialize() {
-    map = new google.maps.Map(document.getElementById("map"),{
-      center:new google.maps.LatLng(JobLatitude,JobLongitude),
-      draggable:false,
-      scrollwheel:false,
-      zoom:12,
-      mapTypeId:google.maps.MapTypeId.ROADMAP
-    });
   };
 
+}]);
 
-
-
-
-});
 
